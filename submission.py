@@ -112,7 +112,7 @@ def main():
 
        disp_path = args.datapath+'disp/'
        if not os.path.exists(disp_path):
-           os.makedirs(path)
+           os.makedirs(disp_path)
        save_path = disp_path+test_left_img[inx].split('/')[-1]
        print('result = %s' %(save_path))
        skimage.io.imsave(save_path,(img*256).astype('uint16'))
