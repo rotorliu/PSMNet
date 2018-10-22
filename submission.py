@@ -109,7 +109,7 @@ def main():
        top_pad   = 384-imgL_o.shape[0]
        left_pad  = 1248-imgL_o.shape[1]
        img = pred_disp[top_pad:,:-left_pad]
-       save_path = args.datapath+'/disp/'+test_left_img[inx].split('/')[-1]
+       save_path = args.datapath+'disp/'+test_left_img[inx].split('/')[-1]
        print('result = %s' %(save_path))
        skimage.io.imsave(save_path,(img*256).astype('uint16'))
 
