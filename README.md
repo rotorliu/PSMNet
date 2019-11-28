@@ -42,6 +42,10 @@ Download RGB cleanpass images and its disparity for three subset: FlyingThings3D
 Put them in the same folder.
 And rename the folder as: "driving_frames_cleanpass", "driving_disparity", "monkaa_frames_cleanpass", "monkaa_disparity", "frames_cleanpass", "frames_disparity".
 ```
+### Notice
+1. Warning of upsample function in PyTorch 0.4.1+: add "align_corners=True" to upsample functions.
+2. Output disparity may be better with multipling by 1.17. Reported from issues [#135](https://github.com/JiaRenChang/PSMNet/issues/135) and [#113](https://github.com/JiaRenChang/PSMNet/issues/113).
+3. with torchvision > 0.2.0, RGB images should be loaded without adding ".astype('float32'))"
 
 ### Train
 As an example, use the following command to train a PSMNet on Scene Flow
@@ -51,7 +55,7 @@ python main.py --maxdisp 192 \
                --model stackhourglass \
                --datapath (your scene flow data folder)\
                --epochs 10 \
-               --loadmodel  (optional)\
+               --loadmodel (optional)\
                --savemodel (path for saving model)
 ```
 
@@ -66,7 +70,7 @@ python finetune.py --maxdisp 192 \
                    --loadmodel (pretrained PSMNet) \
                    --savemodel (path for saving model)
 ```
-You can alse see those example in run.sh
+You can also see those examples in run.sh.
 
 ### Evaluation
 Use the following command to evaluate the trained PSMNet on KITTI 2015 test data
@@ -86,15 +90,19 @@ Update: 2018/9/6 We released the pre-trained KITTI 2012 model.
 
 | KITTI 2015 |  Scene Flow | KITTI 2012|
 |---|---|---|
-|[Google Drive](https://drive.google.com/file/d/1pHWjmhKMG4ffCrpcsp_MTXMJXhgl3kF9/view?usp=sharing)|[Google Drive](https://drive.google.com/file/d/1xoqkQ2NXik1TML_FMUTNZJFAHrhLdKZG/view?usp=sharing)|[Google Drive](https://drive.google.com/file/d/1p4eJ2xDzvQxaqB20A_MmSP9-KORBX1pZ/view)|
+|[Google Drive](https://drive.google.com/file/d/1pHWjmhKMG4ffCrpcsp_MTXMJXhgl3kF9/view?usp=sharing)|[Google Drive](https://drive.google.com/file/d/1xoqkQ2NXik1TML_FMUTNZJFAHrhLdKZG/view?usp=sharing)|[Google Drive](https://drive.google.com/file/d/1p4eJ2xDzvQxaqB20A_MmSP9-KORBX1pZ/view?usp=sharing)|
 
+### Test on your own stereo pair
+```
+python Test_img.py --loadmodel (finetuned PSMNet) --leftimg ./left.png --rightimg ./right.png --isgray False
+```
 
 ## Results
 
-### Evalutation of PSMNet with different settings
+### Evaluation of PSMNet with different settings
 <img align="center" src="https://user-images.githubusercontent.com/11732099/37817886-45a12ece-2eb3-11e8-8254-ae92c723b2f6.png">
 
-※Note that the reported 3-px validation errors were calculated using KITTI's offical matlab code, not our code. 
+※Note that the reported 3-px validation errors were calculated using KITTI's official matlab code, not our code.
 
 ### Results on KITTI 2015 leaderboard
 [Leaderboard Link](http://www.cvlibs.net/datasets/kitti/eval_scene_flow.php?benchmark=stereo)
@@ -132,5 +140,4 @@ The receptive fields were calculated for the pixel at image center, indicated by
 ## Contacts
 followwar@gmail.com
 
-We are working on the implementation on caffe.
 Any discussions or concerns are welcomed!

@@ -22,7 +22,7 @@ parser.add_argument('--maxdisp', type=int ,default=192,
                     help='maxium disparity')
 parser.add_argument('--model', default='stackhourglass',
                     help='select model')
-parser.add_argument('--datapath', default='/media/jiaren/ImageNet/SceneFlowData/',
+parser.add_argument('--datapath', default='dataset/',
                     help='datapath')
 parser.add_argument('--epochs', type=int, default=10,
                     help='number of epochs to train')
@@ -36,6 +36,9 @@ parser.add_argument('--seed', type=int, default=1, metavar='S',
                     help='random seed (default: 1)')
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
+
+# set gpu id used
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
 torch.manual_seed(args.seed)
 if args.cuda:
@@ -93,9 +96,9 @@ def train(imgL,imgR, disp_L):
             output3 = torch.squeeze(output3,1)
             loss = 0.5*F.smooth_l1_loss(output1[mask], disp_true[mask], size_average=True) + 0.7*F.smooth_l1_loss(output2[mask], disp_true[mask], size_average=True) + F.smooth_l1_loss(output3[mask], disp_true[mask], size_average=True) 
         elif args.model == 'basic':
-            output3 = model(imgL,imgR)
-            output = torch.squeeze(output3,1)
-            loss = F.smooth_l1_loss(output3[mask], disp_true[mask], size_average=True)
+            output = model(imgL,imgR)
+            output = torch.squeeze(output,1)
+            loss = F.smooth_l1_loss(output[mask], disp_true[mask], size_average=True)
 
         loss.backward()
         optimizer.step()
